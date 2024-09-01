@@ -4,7 +4,7 @@
     {
         private readonly RequestDelegate _next;
         private const string ApiKeyHeaderName = "X-API-KEY";
-        private const string ApiKey = "your-api-key";
+        private const string ApiKey = "123";
 
         public ApiKeyValidationMiddleware(RequestDelegate next)
         {

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Online_Store_Managment.Data;
 using Online_Store_Managment.Middlewares;
 using Online_Store_Managment.Repositories;
@@ -18,7 +19,33 @@ public class Program
         // Add services to the container.
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+
+            c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "API Key needed to access the endpoints",
+                Name = "X-API-KEY",
+                Type = SecuritySchemeType.ApiKey
+            });
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "ApiKey"
+                }
+            },
+            new List<string>()
+        }
+    });
+        });
 
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
         builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
@@ -56,11 +83,12 @@ public class Program
 
         app.UseHttpsRedirection();
 
-        app.UseMiddleware<RequestLoggingMiddleware>();
-        app.UseMiddleware<ApiKeyValidationMiddleware>();
 
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.UseMiddleware<RequestLoggingMiddleware>();
+        app.UseMiddleware<ApiKeyValidationMiddleware>();
 
         app.MapControllers();
 
