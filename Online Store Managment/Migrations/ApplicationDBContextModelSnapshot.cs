@@ -73,6 +73,8 @@ namespace Online_Store_Managment.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CustomerId");
+
                     b.ToTable("Orders");
                 });
 
@@ -84,7 +86,7 @@ namespace Online_Store_Managment.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
@@ -97,6 +99,8 @@ namespace Online_Store_Managment.Migrations
 
                     b.HasIndex("OrderId");
 
+                    b.HasIndex("ProductId");
+
                     b.ToTable("OrderedProducts");
                 });
 
@@ -107,6 +111,10 @@ namespace Online_Store_Managment.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -123,14 +131,47 @@ namespace Online_Store_Managment.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("Online_Store_Managment.Model.Order", b =>
+                {
+                    b.HasOne("Online_Store_Managment.Model.Customer", "Customer")
+                        .WithMany("Orders")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("Online_Store_Managment.Model.OrderedProducts", b =>
                 {
-                    b.HasOne("Online_Store_Managment.Model.Order", null)
+                    b.HasOne("Online_Store_Managment.Model.Order", "Order")
                         .WithMany("OrderedProducts")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Online_Store_Managment.Model.Product", "Product")
+                        .WithMany("OrderedProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Online_Store_Managment.Model.Customer", b =>
+                {
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Online_Store_Managment.Model.Order", b =>
+                {
+                    b.Navigation("OrderedProducts");
+                });
+
+            modelBuilder.Entity("Online_Store_Managment.Model.Product", b =>
                 {
                     b.Navigation("OrderedProducts");
                 });

@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Online_Store_Managment.Filters;
 using Online_Store_Managment.Model;
 using Online_Store_Managment.Services.IServices;
 
 namespace Online_Store_Managment.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
@@ -34,6 +37,7 @@ namespace Online_Store_Managment.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(EnsureQueryParamFilter))]
         public async Task<IActionResult> AddProduct(Product product)
         {
             if (!ModelState.IsValid)

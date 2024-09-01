@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Online_Store_Managment.Model;
 using Online_Store_Managment.Services.IServices;
 
 namespace Online_Store_Managment.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CustomerController : ControllerBase
@@ -23,7 +25,7 @@ namespace Online_Store_Managment.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCustomerById(int id)
+        public async Task<IActionResult> GetCustomerById([FromRoute] int id)
         {
             var customer = await _customerService.GetCustomerByIdAsync(id);
             if (customer == null)
@@ -34,7 +36,7 @@ namespace Online_Store_Managment.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCustomer(Customer customer)
+        public async Task<IActionResult> AddCustomer([FromBody] Customer customer)
         {
             if (!ModelState.IsValid)
             {

@@ -1,12 +1,25 @@
-﻿namespace Online_Store_Managment.Model
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
+namespace Online_Store_Managment.Model
 {
     public class Order
     {
         public int Id { get; set; }
-        public virtual List<OrderedProducts> OrderedProducts { get; set; }
+
+        [DataType(DataType.Date)]
         public DateTime OrderDate { get; set; }
+
+        [Required]
         public string Status { get; set; }
-        public virtual int CustomerId { get; set; }
+        public int CustomerId { get; set; }
+
+        public virtual ICollection<OrderedProducts> OrderedProducts { get; set; }
+
+        [ForeignKey("CustomerId")]
+        [JsonIgnore]
+        public virtual Customer Customer { get; set; }
 
     }
 }

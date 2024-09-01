@@ -9,14 +9,17 @@ namespace Online_Store_Managment.Model
         [Required]
         public string Name { get; set; }
 
-        [EmailAddress]
+        [EmailAddress, Required]
         public string Email { get; set; }
 
-        [Phone]
+        [Phone, Required]
         public string Phone { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
+
+
+        public virtual ICollection<Order> Orders { get; set; }
 
     }
 }
