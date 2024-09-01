@@ -54,6 +54,7 @@ The **Online Store Management API** is a fully functional Web API designed to ma
     ```bash
     dotnet restore
     ```
+### Configuration
 
 4. **Update the Connection String**:
     Modify `appsettings.json` to include your SQL Server connection string:
