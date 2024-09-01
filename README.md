@@ -136,4 +136,4 @@ Contributions are welcome! If you have suggestions or improvements, please follo
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
